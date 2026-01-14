@@ -26,7 +26,6 @@
       </div>
 
       <div class="topActions">
-        <!-- iOS-like theme switch -->
         <label class="themeSwitch" title="Тема">
           <input id="themeToggle" type="checkbox" />
           <span class="track">
@@ -34,6 +33,87 @@
             <span class="icon sun">☀️</span>
             <span class="icon moon">🌙</span>
           </span>
+        </label>
+
+        <button id="installBtn" class="btn btnGhost hidden" type="button">Установить</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- HOME -->
+      <section id="home" class="view">
+        <div class="card hero">
+          <div class="heroTitle">Тренировка</div>
+          <div class="heroText">Выбирай режим и решай “билеты” по 3 вопроса.</div>
+
+          <div class="actions">
+            <button id="startQuick" class="btn btnPrimary" type="button">3 случайных билета</button>
+            <button id="startFull" class="btn btnSecondary" type="button">Тест по всем вопросам</button>
+          </div>
+
+          <div class="tiny">
+            Совет: установи как приложение: “Поделиться” → “На экран Домой” (iOS) или “Установить” (Android/Chrome).
+          </div>
+        </div>
+      </section>
+
+      <!-- TEST -->
+      <section id="test" class="view hidden">
+        <div class="card status">
+          <div class="statusLeft">
+            <div class="statusTitle" id="ticketTitle">Билет</div>
+            <div class="statusSub" id="ticketSub">Отмечено: 0/3</div>
+          </div>
+
+          <div class="statusRight">
+            <div class="statusScore" id="scoreNow">Верно сейчас: 0/0</div>
+          </div>
+        </div>
+
+        <div id="questionsWrap" class="qWrap"></div>
+
+        <div class="footerActions">
+          <button id="submitTicket" class="btn btnPrimary" type="button">Проверить билет</button>
+          <button id="nextTicket" class="btn btnSecondary hidden" type="button">Дальше</button>
+          <button id="reset" class="btn btnGhost" type="button">Сброс</button>
+        </div>
+
+        <div class="tiny" id="ticketResult"></div>
+      </section>
+
+      <!-- RESULT -->
+      <section id="result" class="view hidden">
+        <div class="card hero">
+          <div class="heroTitle">Готово!</div>
+          <div class="heroText" id="finalText">Результат</div>
+
+          <div class="actions">
+            <button id="tryAgain" class="btn btnPrimary" type="button">Попробовать снова</button>
+            <button id="shareBtn" class="btn btnSecondary" type="button">Поделиться результатом</button>
+          </div>
+
+          <div class="tiny" id="shareHint"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bottom">
+      <span>© Тренажёр ОГЭ 19</span>
+      <span class="dot">•</span>
+      <button id="aboutOffline" class="linkBtn" type="button">Офлайн включён</button>
+    </footer>
+  </div>
+
+  <!-- Важно: сначала questions.js, потом app.js -->
+  <script src="./questions.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+    }
+  </script>
+</body>
+</html>
         </label>
 
         <button id="installBtn" class="btn btnGhost hidden" type="button">Установить</button>
