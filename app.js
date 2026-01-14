@@ -475,4 +475,21 @@ block.innerHTML =
   } else {
     showHome();
   }
+  const themeToggle = document.getElementById("themeToggle");
+const THEME_KEY = "oge19_theme";
+
+function applyTheme(theme) {
+  const isLight = theme === "light";
+  document.body.classList.toggle("light", isLight);
+  if (themeToggle) themeToggle.checked = isLight;
+}
+
+const savedTheme = localStorage.getItem(THEME_KEY);
+applyTheme(savedTheme === "light" ? "light" : "dark");
+
+themeToggle?.addEventListener("change", () => {
+  const theme = themeToggle.checked ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, theme);
+  applyTheme(theme);
+});
 })();
