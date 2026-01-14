@@ -350,3 +350,73 @@ body.light .themeSwitch .knob{
   outline: 2px solid rgba(96,165,250,.55);
   outline-offset: 3px;
 }
+/* iOS-like theme switch */
+.themeSwitch{ display:inline-flex; align-items:center; user-select:none; }
+.themeSwitch input{ position:absolute; opacity:0; pointer-events:none; }
+
+.themeSwitch .track{
+  width: 58px; height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,.10);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+  transition: background .18s ease, border-color .18s ease;
+  cursor:pointer;
+}
+
+.themeSwitch .knob{
+  width: 28px; height: 28px;
+  border-radius: 999px;
+  position:absolute;
+  top: 50%; left: 3px;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 10px 22px rgba(0,0,0,.25);
+  transition: left .18s ease;
+}
+
+.themeSwitch .icon{
+  position:absolute; top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity:.9;
+  pointer-events:none;
+}
+.themeSwitch .sun{ left: 8px; }
+.themeSwitch .moon{ right: 8px; }
+
+.themeSwitch input:checked + .track .knob{ left: 27px; }
+
+body.light .themeSwitch .track{
+  background: rgba(0,0,0,.06);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+}
+body.light .themeSwitch .knob{
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+}
+
+.themeSwitch input:focus-visible + .track{
+  outline: 2px solid rgba(96,165,250,.55);
+  outline-offset: 3px;
+}
+/* ---------- LIGHT THEME ---------- */
+body.light{
+  --bg: #f8fafc;
+  --panel: rgba(0,0,0,.04);
+  --stroke: rgba(0,0,0,.12);
+
+  --text: rgba(15,23,42,.92);
+  --muted: rgba(15,23,42,.65);
+
+  background-color: #f1f5f9;
+  background-image:
+    radial-gradient(1200px 700px at 15% 10%, rgba(59,130,246,.18), transparent 60%),
+    radial-gradient(1100px 700px at 85% 20%, rgba(34,197,94,.12), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,1));
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
