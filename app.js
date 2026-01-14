@@ -2,22 +2,23 @@
   // =========================
   // THEME (iOS switch) - ONCE
   // =========================
-  const themeToggle = document.getElementById("themeToggle");
-  const THEME_KEY = "oge19_theme";
+const themeToggle = document.getElementById("themeToggle");
+const THEME_KEY = "oge19_theme";
 
-  function applyTheme(theme) {
-    const isLight = theme === "light";
-    document.body.classList.toggle("light", isLight);
-    if (themeToggle) themeToggle.checked = isLight;
-  }
+function applyTheme(theme) {
+  const isLight = theme === "light";
+  document.body.classList.toggle("light", isLight);
+  if (themeToggle) themeToggle.checked = !isLight; // ✅ checked = dark
+}
 
-  applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
+applyTheme(localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light");
 
-  themeToggle?.addEventListener("change", () => {
-    const theme = themeToggle.checked ? "light" : "dark";
-    localStorage.setItem(THEME_KEY, theme);
-    applyTheme(theme);
-  });
+themeToggle?.addEventListener("change", () => {
+  const theme = themeToggle.checked ? "dark" : "light"; // ✅ checked = dark
+  localStorage.setItem(THEME_KEY, theme);
+  applyTheme(theme);
+});
+
 
   // =========================
   // APP
