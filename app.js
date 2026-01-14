@@ -328,7 +328,7 @@ themeToggle?.addEventListener("change", () => {
         badge.textContent = q.isCorrect ? "✅ Верно" : "❌ Неправильно";
 
         const msg = document.createElement("span");
-        msg.textContent = q.isCorrect ? "Правильно" : "Неправильно";
+        msg.textContent = q.isCorrect ? "" : "";
 
         feedback.appendChild(badge);
         feedback.appendChild(msg);
