@@ -241,7 +241,7 @@
 
       const meta = document.createElement("div");
       meta.className = "qMeta";
-      meta.textContent = `верных: ${q.kTrue}`;
+      meta.textContent = ``;
 
       head.appendChild(title);
       head.appendChild(meta);
@@ -312,7 +312,7 @@
         const msg = document.createElement("span");
         msg.textContent = q.isCorrect
           ? "Правильно"
-          : `Правильный ответ: ${correctIds.length === 1 ? "истинное утверждение" : "истинные утверждения"}.`;
+          : ``;
 
         feedback.appendChild(badge);
         feedback.appendChild(msg);
@@ -328,8 +328,14 @@
           const block = document.createElement("div");
           block.className = "tiny";
           block.style.marginTop = "8px";
-          // показываем сами верные формулировки (как объяснение)
-          block.textContent = "Истинные: " + q.options.filter(o => o.isTrue).map(o => o.text).join(" | ");
+          // // показываем сами верные формулировки (как объяснение)
+          // block.textContent = "Истинные: " + q.options.filter(o => o.isTrue).map(o => o.text).join(" | ");
+          const trueOptions = q.options.filter(o => o.isTrue);
+
+block.innerHTML =
+  "<b>Истинные:</b><br>" +
+  trueOptions.map(t => "• " + t.text).join("<br>");
+
           card.appendChild(block);
         }
       }
