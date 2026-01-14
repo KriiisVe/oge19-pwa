@@ -266,7 +266,7 @@ themeToggle?.addEventListener("change", () => {
 
       const meta = document.createElement("div");
       meta.className = "qMeta";
-      meta.textContent = `верных: ${q.kTrue}`;
+      meta.textContent = ``;
 
       head.appendChild(title);
       head.appendChild(meta);
