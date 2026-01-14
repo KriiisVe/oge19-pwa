@@ -235,7 +235,18 @@ themeToggle?.addEventListener("change", () => {
     // Counts
     const totalAnswered = state.answeredQuestions;
     const totalCorrect = state.correctQuestions;
-    if (scoreNow) scoreNow.textContent = `Верно сейчас: ${totalCorrect}/${Math.max(totalAnswered, 0)}`;
+    // if (scoreNow) scoreNow.textContent = `Верно сейчас: ${totalCorrect}/${Math.max(totalAnswered, 0)}`;
+// сколько всего вопросов в тесте
+const TOTAL_QUESTIONS =
+  state.mode === "quick"
+    ? 3                          // 1 билет = 3 вопроса
+    : Math.ceil(bank.length / 3); // 117 утверждений → 39 вопросов
+
+// сколько решено верно всего
+const totalCorrect = state.correctQuestions;
+
+// выводим в шапке
+scoreNow.textContent = `Верно сейчас: ${totalCorrect}/${TOTAL_QUESTIONS}`;
 
     const markedCount = state.ticket.reduce((acc, q) => acc + (q.selectedIds.length > 0 ? 1 : 0), 0);
     if (ticketSub) ticketSub.textContent = `Отмечено: ${markedCount}/3`;
