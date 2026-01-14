@@ -24,19 +24,20 @@
           <div class="subtitle">Задание 19</div>
         </div>
       </div>
-<div style="display:flex; gap:10px; align-items:center;">
-  <label class="themeSwitch" title="Тема">
-    <input id="themeToggle" type="checkbox" />
-    <span class="track">
-      <span class="knob"></span>
-      <span class="icon sun">☀️</span>
-      <span class="icon moon">🌙</span>
-    </span>
-  </label>
 
-  <button id="installBtn" class="btn btnGhost hidden" type="button">Установить</button>
-</div>
-      <!-- <button id="installBtn" class="btn btnGhost hidden" type="button">Установить</button> -->
+      <div class="topActions">
+        <!-- iOS-like theme switch -->
+        <label class="themeSwitch" title="Тема">
+          <input id="themeToggle" type="checkbox" />
+          <span class="track">
+            <span class="knob"></span>
+            <span class="icon sun">☀️</span>
+            <span class="icon moon">🌙</span>
+          </span>
+        </label>
+
+        <button id="installBtn" class="btn btnGhost hidden" type="button">Установить</button>
+      </div>
     </header>
 
     <main class="main">
@@ -53,17 +54,8 @@
             <button id="startFull" class="btn btnSecondary" type="button">Тест по всем вопросам</button>
           </div>
 
-         
-        </div>
-
-        <div class="card info">
-          <div class="infoRow">
-            <!-- <div class="pill">Билет = 3 вопроса</div>
-            <div class="pill">Верных вариантов: 1 или 2</div>
-            <div class="pill">PWA офлайн</div> -->
-             <div class="tiny">
+          <div class="tiny">
             Совет: установи как приложение: “Поделиться” → “На экран Домой” (iOS) или “Установить” (Android/Chrome).
-          </div>
           </div>
         </div>
       </section>
@@ -73,10 +65,12 @@
         <div class="card status">
           <div class="statusLeft">
             <div class="statusTitle" id="ticketTitle">Билет</div>
-            <div class="statusSub hidden" id="ticketSub">Отмечено: 0/3</div> 
+            <!-- важно: ticketSub должен существовать, иначе app.js может падать -->
+            <div class="statusSub" id="ticketSub">Отмечено: 0/3</div>
           </div>
+
           <div class="statusRight">
-            <div class="statusScore" id="scoreNow">Верно сейчас: 0/3</div>
+            <div class="statusScore" id="scoreNow">Верно сейчас: 0/0</div>
           </div>
         </div>
 
@@ -109,13 +103,16 @@
 
     <footer class="bottom">
       <span>© Тренажёр ОГЭ 19</span>
-      <!-- <span class="dot">•</span>
-      <button id="aboutOffline" class="linkBtn hidden" type="button">Офлайн включён</button> -->
+      <span class="dot">•</span>
+      <!-- важно: aboutOffline должен существовать, иначе app.js может падать -->
+      <button id="aboutOffline" class="linkBtn" type="button">Офлайн включён</button>
     </footer>
   </div>
 
+  <!-- порядок важен -->
   <script src="./questions.js"></script>
   <script src="./app.js"></script>
+
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
