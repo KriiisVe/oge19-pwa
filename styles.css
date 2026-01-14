@@ -1,9 +1,11 @@
 :root{
   --bg: #0b1220;
+
   --panel: rgba(255,255,255,.06);
   --stroke: rgba(255,255,255,.10);
+
   --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.65);
+  --muted: rgba(255,255,255,.70);
 
   --primary: #2563eb;
   --primary2: #60a5fa;
@@ -17,15 +19,24 @@
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
   color: var(--text);
-  background:
-    radial-gradient(1000px 600px at 10% 0%, rgba(37,99,235,.30), transparent 60%),
-    radial-gradient(900px 600px at 90% 20%, rgba(34,197,94,.18), transparent 60%),
-    radial-gradient(700px 500px at 50% 100%, rgba(96,165,250,.16), transparent 60%),
-    var(--bg);
+
+  /* Тёмная тема: спокойный фон, не повторяется, растягивается */
+  background-color: #0f172a;
+  background-image:
+    radial-gradient(1200px 700px at 15% 10%, rgba(59,130,246,.22), transparent 60%),
+    radial-gradient(1100px 700px at 85% 20%, rgba(34,197,94,.14), transparent 62%),
+    radial-gradient(900px 650px at 50% 110%, rgba(148,163,184,.18), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .hidden{ display:none !important; }
@@ -48,11 +59,18 @@ body{
   padding-top: env(safe-area-inset-top);
 }
 
+.topActions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
 .brand{
   display:flex;
   align-items:center;
   gap: 12px;
 }
+
 .logo{
   width:44px;height:44px;
   display:grid;place-items:center;
@@ -61,6 +79,7 @@ body{
   box-shadow: var(--shadow);
   font-weight:900;
 }
+
 .brandText .title{ font-weight:900; line-height:1.1; }
 .brandText .subtitle{ color: var(--muted); font-size: 13px; margin-top:2px; }
 
@@ -119,20 +138,6 @@ body{
   line-height: 1.45;
 }
 
-.infoRow{
-  display:flex;
-  flex-wrap:wrap;
-  gap: 8px;
-}
-.pill{
-  font-size: 13px;
-  color: var(--text);
-  padding: 8px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.10);
-}
-
 .status{
   display:flex;
   align-items:flex-start;
@@ -159,6 +164,7 @@ body{
   background: rgba(255,255,255,.04);
   padding: 14px;
 }
+
 .qHead{
   display:flex;
   align-items:flex-start;
@@ -205,6 +211,7 @@ body{
   gap: 8px;
   flex-wrap:wrap;
 }
+
 .badge{
   display:inline-flex;
   align-items:center;
@@ -254,103 +261,10 @@ body{
   cursor:pointer;
   padding: 0;
 }
-body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
-  color: var(--text);
 
-  /* Светлее фон + мягкие градиенты без повторов */
-  background-color: #0f172a; /* светлее чем было */
-  background-image:
-    radial-gradient(1200px 700px at 15% 10%, rgba(59,130,246,.22), transparent 60%),
-    radial-gradient(1100px 700px at 85% 20%, rgba(34,197,94,.14), transparent 62%),
-    radial-gradient(900px 650px at 50% 110%, rgba(148,163,184,.20), transparent 60%),
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
-
-  background-repeat: no-repeat;
-  background-size: cover;              /* растягиваем красиво */
-  background-position: center;
-  background-attachment: fixed;        /* приятный “статичный” фон при скролле */
-}
-:root{
-  --panel: rgba(255,255,255,.08);
-  --stroke: rgba(255,255,255,.14);
-}
-:root{
-  --text: rgba(255,255,255,.90);
-  --muted: rgba(255,255,255,.70);
-}
-/* iOS-like theme switch */
-.themeSwitch{
-  display:inline-flex;
-  align-items:center;
-  user-select:none;
-}
-
-.themeSwitch input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-.themeSwitch .track{
-  width: 58px;
-  height: 34px;
-  border-radius: 999px;
-  border: 1px solid var(--stroke);
-  background: rgba(255,255,255,.10);
-  position: relative;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
-  transition: background .18s ease, border-color .18s ease;
-  cursor:pointer;
-}
-
-body.light .themeSwitch .track{
-  background: rgba(0,0,0,.06);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
-}
-
-.themeSwitch .knob{
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  position:absolute;
-  top: 50%;
-  left: 3px;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,.92);
-  box-shadow: 0 10px 22px rgba(0,0,0,.25);
-  transition: left .18s ease;
-}
-
-body.light .themeSwitch .knob{
-  background: #ffffff;
-  box-shadow: 0 10px 22px rgba(0,0,0,.12);
-}
-
-.themeSwitch .icon{
-  position:absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  opacity:.9;
-  transition: opacity .18s ease;
-  pointer-events:none;
-}
-
-.themeSwitch .sun{ left: 8px; }
-.themeSwitch .moon{ right: 8px; }
-
-.themeSwitch input:checked + .track .knob{
-  left: 27px;
-}
-
-/* Optional: focus style for accessibility */
-.themeSwitch input:focus-visible + .track{
-  outline: 2px solid rgba(96,165,250,.55);
-  outline-offset: 3px;
-}
-/* iOS-like theme switch */
+/* =========================
+   iOS-like theme switch
+   ========================= */
 .themeSwitch{ display:inline-flex; align-items:center; user-select:none; }
 .themeSwitch input{ position:absolute; opacity:0; pointer-events:none; }
 
@@ -388,6 +302,56 @@ body.light .themeSwitch .knob{
 
 .themeSwitch input:checked + .track .knob{ left: 27px; }
 
+.themeSwitch input:focus-visible + .track{
+  outline: 2px solid rgba(96,165,250,.55);
+  outline-offset: 3px;
+}
+
+/* =========================
+   LIGHT THEME
+   ========================= */
+body.light{
+  --panel: rgba(0,0,0,.04);
+  --stroke: rgba(0,0,0,.12);
+
+  --text: rgba(15,23,42,.92);
+  --muted: rgba(15,23,42,.65);
+
+  --shadow: 0 18px 50px rgba(0,0,0,.12);
+
+  background-color: #f1f5f9;
+  background-image:
+    radial-gradient(1200px 700px at 15% 10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(1100px 700px at 85% 20%, rgba(34,197,94,.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,1));
+}
+
+body.light .btnSecondary{
+  background: rgba(0,0,0,.04);
+  border-color: rgba(0,0,0,.10);
+  color: var(--text);
+}
+body.light .btnGhost{
+  border-color: rgba(0,0,0,.14);
+  color: var(--text);
+}
+body.light .bottom{
+  color: rgba(15,23,42,.55);
+}
+body.light .linkBtn{
+  color: rgba(15,23,42,.60);
+}
+body.light .qCard{
+  background: rgba(255,255,255,.78);
+  border-color: rgba(0,0,0,.08);
+}
+body.light .opt{
+  background: rgba(0,0,0,.02);
+  border-color: rgba(0,0,0,.08);
+}
+body.light .badgeOk{ color: rgba(15,23,42,.92); }
+body.light .badgeBad{ color: rgba(15,23,42,.92); }
+
 body.light .themeSwitch .track{
   background: rgba(0,0,0,.06);
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
@@ -395,28 +359,4 @@ body.light .themeSwitch .track{
 body.light .themeSwitch .knob{
   background: #fff;
   box-shadow: 0 10px 22px rgba(0,0,0,.12);
-}
-
-.themeSwitch input:focus-visible + .track{
-  outline: 2px solid rgba(96,165,250,.55);
-  outline-offset: 3px;
-}
-/* ---------- LIGHT THEME ---------- */
-body.light{
-  --bg: #f8fafc;
-  --panel: rgba(0,0,0,.04);
-  --stroke: rgba(0,0,0,.12);
-
-  --text: rgba(15,23,42,.92);
-  --muted: rgba(15,23,42,.65);
-
-  background-color: #f1f5f9;
-  background-image:
-    radial-gradient(1200px 700px at 15% 10%, rgba(59,130,246,.18), transparent 60%),
-    radial-gradient(1100px 700px at 85% 20%, rgba(34,197,94,.12), transparent 62%),
-    linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,1));
-
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
 }
