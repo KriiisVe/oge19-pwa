@@ -1,4 +1,22 @@
 (() => {
+  // ----- Theme toggle (put at top) -----
+const themeToggle = document.getElementById("themeToggle");
+const THEME_KEY = "oge19_theme";
+
+function applyTheme(theme) {
+  const isLight = theme === "light";
+  document.body.classList.toggle("light", isLight);
+  if (themeToggle) themeToggle.checked = isLight;
+}
+
+applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
+
+themeToggle?.addEventListener("change", () => {
+  const theme = themeToggle.checked ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, theme);
+  applyTheme(theme);
+});
+
   const $ = (s) => document.querySelector(s);
 
   const home = $("#home");
@@ -465,9 +483,9 @@ block.innerHTML =
 
   shareBtn.addEventListener("click", shareResult);
 
-  aboutOffline.addEventListener("click", () => {
-    alert("Офлайн режим включён: приложение кэширует файлы через Service Worker и работает без интернета.");
-  });
+aboutOffline?.addEventListener("click", () => {
+  alert("Офлайн режим включён: приложение кэширует файлы через Service Worker и работает без интернета.");
+});
 
   // ----- Bootstrap: if unfinished test exists, continue
   if (state.mode && state.ticket?.length) {
