@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#2563eb" />
   <meta name="description" content="ОГЭ математика. Задание 19. Тренировка истинных/ложных высказываний." />
 
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icons/icon.svg" />
 
   <title>ОГЭ 19 — Тренажёр</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
@@ -43,7 +43,7 @@
           </div>
 
           <div class="tiny">
-            Совет: добавь на экран телефона через “Поделиться” → “На экран Домой”.
+            Совет: установи как приложение: “Поделиться” → “На экран Домой” (iOS) или “Установить” (Android/Chrome).
           </div>
         </div>
 
@@ -51,7 +51,7 @@
           <div class="infoRow">
             <div class="pill">Билет = 3 вопроса</div>
             <div class="pill">Верных вариантов: 1 или 2</div>
-            <div class="pill">Офлайн PWA</div>
+            <div class="pill">PWA офлайн</div>
           </div>
         </div>
       </section>
@@ -61,7 +61,7 @@
         <div class="card status">
           <div class="statusLeft">
             <div class="statusTitle" id="ticketTitle">Билет</div>
-            <div class="statusSub" id="ticketSub">Отмечено: 0/0</div>
+            <div class="statusSub" id="ticketSub">Отмечено: 0/3</div>
           </div>
           <div class="statusRight">
             <div class="statusScore" id="scoreNow">Верно сейчас: 0/0</div>
@@ -98,14 +98,13 @@
     <footer class="bottom">
       <span>© Тренажёр ОГЭ 19</span>
       <span class="dot">•</span>
-      <button id="aboutOffline" class="linkBtn" type="button">Офлайн: включено</button>
+      <button id="aboutOffline" class="linkBtn" type="button">Офлайн включён</button>
     </footer>
   </div>
 
-  <script src="questions.js"></script>
-  <script src="app.js"></script>
+  <script src="./questions.js"></script>
+  <script src="./app.js"></script>
   <script>
-    // SW register
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
     }
