@@ -265,7 +265,7 @@ themeToggle?.addEventListener("change", () => {
       title.textContent = `${idx + 1}. ${needText}`;
 
       const meta = document.createElement("div");
-      meta.className = "qMeta";
+      meta.className = "qMeta hidden";
       meta.textContent = ``;
 
       head.appendChild(title);
