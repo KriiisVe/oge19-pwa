@@ -1,22 +1,27 @@
 (() => {
-  // ----- Theme toggle (put at top) -----
-const themeToggle = document.getElementById("themeToggle");
-const THEME_KEY = "oge19_theme";
+  // =========================
+  // THEME (iOS switch) - ONCE
+  // =========================
+  const themeToggle = document.getElementById("themeToggle");
+  const THEME_KEY = "oge19_theme";
 
-function applyTheme(theme) {
-  const isLight = theme === "light";
-  document.body.classList.toggle("light", isLight);
-  if (themeToggle) themeToggle.checked = isLight;
-}
+  function applyTheme(theme) {
+    const isLight = theme === "light";
+    document.body.classList.toggle("light", isLight);
+    if (themeToggle) themeToggle.checked = isLight;
+  }
 
-applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
+  applyTheme(localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark");
 
-themeToggle?.addEventListener("change", () => {
-  const theme = themeToggle.checked ? "light" : "dark";
-  localStorage.setItem(THEME_KEY, theme);
-  applyTheme(theme);
-});
+  themeToggle?.addEventListener("change", () => {
+    const theme = themeToggle.checked ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, theme);
+    applyTheme(theme);
+  });
 
+  // =========================
+  // APP
+  // =========================
   const $ = (s) => document.querySelector(s);
 
   const home = $("#home");
@@ -57,15 +62,15 @@ themeToggle?.addEventListener("change", () => {
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    installBtn.classList.remove("hidden");
+    installBtn?.classList.remove("hidden");
   });
 
-  installBtn.addEventListener("click", async () => {
+  installBtn?.addEventListener("click", async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt = null;
-    installBtn.classList.add("hidden");
+    installBtn?.classList.add("hidden");
   });
 
   // ----- State -----
@@ -93,6 +98,7 @@ themeToggle?.addEventListener("change", () => {
   function saveState() {
     localStorage.setItem(LS_KEY, JSON.stringify(state));
   }
+
   function loadState() {
     try {
       const raw = localStorage.getItem(LS_KEY);
@@ -102,6 +108,7 @@ themeToggle?.addEventListener("change", () => {
       return null;
     }
   }
+
   function hardReset() {
     state = defaultState();
     saveState();
@@ -189,10 +196,10 @@ themeToggle?.addEventListener("change", () => {
   }
 
   function show(view) {
-    home.classList.add("hidden");
-    test.classList.add("hidden");
-    result.classList.add("hidden");
-    view.classList.remove("hidden");
+    home?.classList.add("hidden");
+    test?.classList.add("hidden");
+    result?.classList.add("hidden");
+    view?.classList.remove("hidden");
   }
 
   function showHome() { show(home); }
@@ -204,9 +211,7 @@ themeToggle?.addEventListener("change", () => {
     state = defaultState();
     state.mode = mode;
 
-    if (mode === "full") {
-      state.usedIds = {};
-    }
+    if (mode === "full") state.usedIds = {};
 
     state.ticketIndex = 0;
     state.ticket = makeTicket();
@@ -216,26 +221,27 @@ themeToggle?.addEventListener("change", () => {
 
   // ----- Render -----
   function renderTicket() {
-    ticketResult.textContent = "";
+    if (!questionsWrap) return;
+
+    if (ticketResult) ticketResult.textContent = "";
 
     // Header
-    if (state.mode === "quick") {
-      ticketTitle.textContent = `Билет 1 из 1`;
-    } else {
-      ticketTitle.textContent = `Билет ${state.ticketIndex + 1}`;
+    if (ticketTitle) {
+      if (state.mode === "quick") ticketTitle.textContent = `Билет 1 из 1`;
+      else ticketTitle.textContent = `Билет ${state.ticketIndex + 1}`;
     }
 
     // Counts
     const totalAnswered = state.answeredQuestions;
     const totalCorrect = state.correctQuestions;
-    scoreNow.textContent = `Верно сейчас: ${totalCorrect}/${Math.max(totalAnswered, 0)}`;
+    if (scoreNow) scoreNow.textContent = `Верно сейчас: ${totalCorrect}/${Math.max(totalAnswered, 0)}`;
 
     const markedCount = state.ticket.reduce((acc, q) => acc + (q.selectedIds.length > 0 ? 1 : 0), 0);
-    ticketSub.textContent = `Отмечено: ${markedCount}/3`;
+    if (ticketSub) ticketSub.textContent = `Отмечено: ${markedCount}/3`;
 
     const allChecked = state.ticket.every(q => q.checked);
-    submitTicket.classList.toggle("hidden", allChecked);
-    nextTicket.classList.toggle("hidden", !allChecked);
+    submitTicket?.classList.toggle("hidden", allChecked);
+    nextTicket?.classList.toggle("hidden", !allChecked);
 
     // Questions
     questionsWrap.innerHTML = "";
@@ -259,7 +265,7 @@ themeToggle?.addEventListener("change", () => {
 
       const meta = document.createElement("div");
       meta.className = "qMeta";
-      meta.textContent = ``;
+      meta.textContent = `верных: ${q.kTrue}`;
 
       head.appendChild(title);
       head.appendChild(meta);
@@ -268,7 +274,7 @@ themeToggle?.addEventListener("change", () => {
       const opts = document.createElement("div");
       opts.className = "opts";
 
-      q.options.forEach((opt, optIdx) => {
+      q.options.forEach((opt) => {
         const row = document.createElement("label");
         row.className = "opt";
 
@@ -294,7 +300,6 @@ themeToggle?.addEventListener("change", () => {
         row.appendChild(cb);
         row.appendChild(t);
 
-        // маленькая подсказка после проверки
         if (q.checked) {
           const hint = document.createElement("div");
           hint.className = "optHint";
@@ -321,24 +326,11 @@ themeToggle?.addEventListener("change", () => {
         badge.className = "badge " + (q.isCorrect ? "badgeOk" : "badgeBad");
         badge.textContent = q.isCorrect ? "✅ Верно" : "❌ Неправильно";
 
-        const correctIds = q.options.filter(o => o.isTrue).map(o => o.id);
-        const correctTexts = q.options
-          .filter(o => o.isTrue)
-          .map(o => `• ${o.text}`)
-          .join(" ");
-
         const msg = document.createElement("span");
-        msg.textContent = q.isCorrect
-          ? "Правильно"
-          : ``;
+        msg.textContent = q.isCorrect ? "Правильно" : "Неправильно";
 
         feedback.appendChild(badge);
         feedback.appendChild(msg);
-
-        const extra = document.createElement("div");
-        extra.className = "tiny";
-        extra.style.marginTop = "8px";
-        extra.textContent = q.isCorrect ? "" : "";
 
         card.appendChild(feedback);
 
@@ -346,13 +338,11 @@ themeToggle?.addEventListener("change", () => {
           const block = document.createElement("div");
           block.className = "tiny";
           block.style.marginTop = "8px";
-          // // показываем сами верные формулировки (как объяснение)
-          // block.textContent = "Истинные: " + q.options.filter(o => o.isTrue).map(o => o.text).join(" | ");
-          const trueOptions = q.options.filter(o => o.isTrue);
 
-block.innerHTML =
-  "<b>Истинные:</b><br>" +
-  trueOptions.map(t => "• " + t.text).join("<br>");
+          const trueOptions = q.options.filter(o => o.isTrue);
+          block.innerHTML =
+            "<b>Истинные:</b><br>" +
+            trueOptions.map(t => "• " + t.text).join("<br>");
 
           card.appendChild(block);
         }
@@ -372,10 +362,9 @@ block.innerHTML =
   }
 
   function checkTicket() {
-    // require answers for all 3 questions
     const missing = state.ticket.filter(q => q.selectedIds.length === 0).length;
     if (missing > 0) {
-      ticketResult.textContent = `Нужно отметить ответы во всех 3 вопросах.`;
+      if (ticketResult) ticketResult.textContent = `Нужно отметить ответы во всех 3 вопросах.`;
       return;
     }
 
@@ -394,8 +383,7 @@ block.innerHTML =
       }
     });
 
-    // summary under buttons
-    ticketResult.textContent = `Результат билета: ${correctInTicket}/3.`;
+    if (ticketResult) ticketResult.textContent = `Результат билета: ${correctInTicket}/3.`;
 
     saveState();
     renderTicket();
@@ -405,19 +393,15 @@ block.innerHTML =
     const isQuick = state.mode === "quick";
 
     if (isQuick) {
-      // after one ticket -> result
       showResult();
       return;
     }
 
-    // full mode: stop once every bank statement appeared at least once (as an option)
-    // note: current ticket already contributed to usedIds when created
     if (allBankUsedOnce()) {
       showResult();
       return;
     }
 
-    // else generate next ticket
     state.ticketIndex += 1;
     state.ticket = makeTicket();
     saveState();
@@ -431,13 +415,12 @@ block.innerHTML =
     const percent = total ? Math.round((correct / total) * 100) : 0;
 
     const modeLabel = state.mode === "quick" ? "3 случайных" : "по всем вопросам";
-    finalText.textContent = `Режим: ${modeLabel}. Верно: ${correct}/${total} (${percent}%).`;
+    if (finalText) finalText.textContent = `Режим: ${modeLabel}. Верно: ${correct}/${total} (${percent}%).`;
 
-    // hint about share
-    if (navigator.share) {
-      shareHint.textContent = "Нажми «Поделиться» — можно отправить в Telegram.";
-    } else {
-      shareHint.textContent = "Если кнопка «Поделиться» не работает, откроется Telegram с готовым сообщением.";
+    if (shareHint) {
+      shareHint.textContent = navigator.share
+        ? "Нажми «Поделиться» — можно отправить в Telegram."
+        : "Если кнопка «Поделиться» не работает, откроется Telegram с готовым сообщением.";
     }
   }
 
@@ -449,65 +432,37 @@ block.innerHTML =
 
     const text = `ОГЭ 19 — результат ✅\nРежим: ${modeLabel}\nВерно: ${correct}/${total} (${percent}%)`;
 
-    // Try native share (mobile)
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: "ОГЭ 19 — результат",
-          text
-        });
+        await navigator.share({ title: "ОГЭ 19 — результат", text });
         return;
-      } catch {
-        // fallthrough to telegram
-      }
+      } catch {}
     }
 
-    // Telegram fallback (opens app if installed)
     const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(text)}`;
     window.open(tgUrl, "_blank", "noopener,noreferrer");
   }
 
-  // ----- Events -----
-  startQuick.addEventListener("click", () => startMode("quick"));
-  startFull.addEventListener("click", () => startMode("full"));
+  // ----- Events (safe) -----
+  startQuick?.addEventListener("click", () => startMode("quick"));
+  startFull?.addEventListener("click", () => startMode("full"));
 
-  submitTicket.addEventListener("click", checkTicket);
-  nextTicket.addEventListener("click", nextStep);
+  submitTicket?.addEventListener("click", checkTicket);
+  nextTicket?.addEventListener("click", nextStep);
 
-  resetBtn.addEventListener("click", hardReset);
-  tryAgain.addEventListener("click", () => {
-    // restart same mode or go home if none
+  resetBtn?.addEventListener("click", hardReset);
+  tryAgain?.addEventListener("click", () => {
     if (!state.mode) showHome();
     else startMode(state.mode);
   });
 
-  shareBtn.addEventListener("click", shareResult);
+  shareBtn?.addEventListener("click", shareResult);
 
-aboutOffline?.addEventListener("click", () => {
-  alert("Офлайн режим включён: приложение кэширует файлы через Service Worker и работает без интернета.");
-});
+  aboutOffline?.addEventListener("click", () => {
+    alert("Офлайн режим включён: приложение кэширует файлы через Service Worker и работает без интернета.");
+  });
 
-  // ----- Bootstrap: if unfinished test exists, continue
-  if (state.mode && state.ticket?.length) {
-    showTest();
-  } else {
-    showHome();
-  }
-  const themeToggle = document.getElementById("themeToggle");
-const THEME_KEY = "oge19_theme";
-
-function applyTheme(theme) {
-  const isLight = theme === "light";
-  document.body.classList.toggle("light", isLight);
-  if (themeToggle) themeToggle.checked = isLight;
-}
-
-const savedTheme = localStorage.getItem(THEME_KEY);
-applyTheme(savedTheme === "light" ? "light" : "dark");
-
-themeToggle?.addEventListener("change", () => {
-  const theme = themeToggle.checked ? "light" : "dark";
-  localStorage.setItem(THEME_KEY, theme);
-  applyTheme(theme);
-});
+  // ----- Bootstrap -----
+  if (state.mode && state.ticket?.length) showTest();
+  else showHome();
 })();
