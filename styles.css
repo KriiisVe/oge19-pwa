@@ -280,3 +280,73 @@ body{
   --text: rgba(255,255,255,.90);
   --muted: rgba(255,255,255,.70);
 }
+/* iOS-like theme switch */
+.themeSwitch{
+  display:inline-flex;
+  align-items:center;
+  user-select:none;
+}
+
+.themeSwitch input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.themeSwitch .track{
+  width: 58px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,.10);
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+  transition: background .18s ease, border-color .18s ease;
+  cursor:pointer;
+}
+
+body.light .themeSwitch .track{
+  background: rgba(0,0,0,.06);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+}
+
+.themeSwitch .knob{
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  position:absolute;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 10px 22px rgba(0,0,0,.25);
+  transition: left .18s ease;
+}
+
+body.light .themeSwitch .knob{
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+}
+
+.themeSwitch .icon{
+  position:absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity:.9;
+  transition: opacity .18s ease;
+  pointer-events:none;
+}
+
+.themeSwitch .sun{ left: 8px; }
+.themeSwitch .moon{ right: 8px; }
+
+.themeSwitch input:checked + .track .knob{
+  left: 27px;
+}
+
+/* Optional: focus style for accessibility */
+.themeSwitch input:focus-visible + .track{
+  outline: 2px solid rgba(96,165,250,.55);
+  outline-offset: 3px;
+}
