@@ -254,3 +254,29 @@ body{
   cursor:pointer;
   padding: 0;
 }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+  color: var(--text);
+
+  /* Светлее фон + мягкие градиенты без повторов */
+  background-color: #0f172a; /* светлее чем было */
+  background-image:
+    radial-gradient(1200px 700px at 15% 10%, rgba(59,130,246,.22), transparent 60%),
+    radial-gradient(1100px 700px at 85% 20%, rgba(34,197,94,.14), transparent 62%),
+    radial-gradient(900px 650px at 50% 110%, rgba(148,163,184,.20), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+
+  background-repeat: no-repeat;
+  background-size: cover;              /* растягиваем красиво */
+  background-position: center;
+  background-attachment: fixed;        /* приятный “статичный” фон при скролле */
+}
+:root{
+  --panel: rgba(255,255,255,.08);
+  --stroke: rgba(255,255,255,.14);
+}
+:root{
+  --text: rgba(255,255,255,.90);
+  --muted: rgba(255,255,255,.70);
+}
