@@ -1,7 +1,6 @@
 :root{
   --bg: #0b1220;
   --panel: rgba(255,255,255,.06);
-  --panel2: rgba(255,255,255,.08);
   --stroke: rgba(255,255,255,.10);
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.65);
@@ -11,7 +10,6 @@
 
   --ok: #22c55e;
   --bad: #ef4444;
-  --warn: #f59e0b;
 
   --radius: 20px;
   --shadow: 0 18px 50px rgba(0,0,0,.35);
@@ -21,7 +19,7 @@
 html,body{ height:100%; }
 body{
   margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
   color: var(--text);
   background:
     radial-gradient(1000px 600px at 10% 0%, rgba(37,99,235,.30), transparent 60%),
@@ -61,9 +59,9 @@ body{
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(37,99,235,.9), rgba(96,165,250,.9));
   box-shadow: var(--shadow);
-  font-weight:800;
+  font-weight:900;
 }
-.brandText .title{ font-weight:800; line-height:1.1; }
+.brandText .title{ font-weight:900; line-height:1.1; }
 .brandText .subtitle{ color: var(--muted); font-size: 13px; margin-top:2px; }
 
 .main{ flex:1; display:flex; }
@@ -78,7 +76,7 @@ body{
 }
 
 .hero{ padding: 18px; }
-.heroTitle{ font-size: 22px; font-weight: 900; letter-spacing: .2px; }
+.heroTitle{ font-size: 22px; font-weight: 950; letter-spacing: .2px; }
 .heroText{ margin-top: 8px; color: var(--muted); line-height: 1.45; }
 
 .actions{
@@ -92,7 +90,7 @@ body{
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 12px 14px;
-  font-weight: 750;
+  font-weight: 800;
   cursor:pointer;
   transition: transform .08s ease, opacity .12s ease, background .12s ease, border-color .12s ease;
   user-select:none;
@@ -141,7 +139,7 @@ body{
   justify-content:space-between;
   gap: 12px;
 }
-.statusTitle{ font-weight: 900; font-size: 18px; }
+.statusTitle{ font-weight: 950; font-size: 18px; }
 .statusSub{ color: var(--muted); margin-top: 4px; font-size: 13px; }
 .statusScore{
   color: var(--text);
@@ -149,7 +147,7 @@ body{
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.10);
   border-radius: 999px;
-  font-weight: 800;
+  font-weight: 900;
   white-space:nowrap;
 }
 
@@ -168,7 +166,7 @@ body{
   gap: 10px;
 }
 .qTitle{
-  font-weight: 900;
+  font-weight: 950;
   line-height: 1.2;
 }
 .qMeta{
@@ -191,6 +189,13 @@ body{
 .opt input{ margin-top: 4px; }
 .optText{ line-height: 1.35; color: var(--text); }
 
+.optHint{
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 26px;
+  margin-top: 2px;
+}
+
 .qFeedback{
   margin-top: 10px;
   font-size: 13px;
@@ -198,6 +203,7 @@ body{
   display:flex;
   align-items:center;
   gap: 8px;
+  flex-wrap:wrap;
 }
 .badge{
   display:inline-flex;
@@ -205,7 +211,7 @@ body{
   gap: 6px;
   padding: 6px 10px;
   border-radius: 999px;
-  font-weight: 900;
+  font-weight: 950;
   font-size: 13px;
 }
 
