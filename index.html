@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="description" content="ОГЭ математика. Задание 19. Тренировка истинных/ложных высказываний." />
+
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+
+  <title>ОГЭ 19 — Тренажёр</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">19</div>
+        <div class="brandText">
+          <div class="title">ОГЭ Математика</div>
+          <div class="subtitle">Задание 19 — истинные высказывания</div>
+        </div>
+      </div>
+
+      <button id="installBtn" class="btn btnGhost hidden" type="button">Установить</button>
+    </header>
+
+    <main class="main">
+      <!-- HOME -->
+      <section id="home" class="view">
+        <div class="card hero">
+          <div class="heroTitle">Тренировка без интернета</div>
+          <div class="heroText">
+            Выбирай режим и решай “билеты” по 3 вопроса. В каждом вопросе — 3 утверждения.
+          </div>
+
+          <div class="actions">
+            <button id="startQuick" class="btn btnPrimary" type="button">3 случайных вопроса</button>
+            <button id="startFull" class="btn btnSecondary" type="button">Тест по всем вопросам</button>
+          </div>
+
+          <div class="tiny">
+            Совет: добавь на экран телефона через “Поделиться” → “На экран Домой”.
+          </div>
+        </div>
+
+        <div class="card info">
+          <div class="infoRow">
+            <div class="pill">Билет = 3 вопроса</div>
+            <div class="pill">Верных вариантов: 1 или 2</div>
+            <div class="pill">Офлайн PWA</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEST -->
+      <section id="test" class="view hidden">
+        <div class="card status">
+          <div class="statusLeft">
+            <div class="statusTitle" id="ticketTitle">Билет</div>
+            <div class="statusSub" id="ticketSub">Отмечено: 0/0</div>
+          </div>
+          <div class="statusRight">
+            <div class="statusScore" id="scoreNow">Верно сейчас: 0/0</div>
+          </div>
+        </div>
+
+        <div id="questionsWrap" class="qWrap"></div>
+
+        <div class="footerActions">
+          <button id="submitTicket" class="btn btnPrimary" type="button">Проверить билет</button>
+          <button id="nextTicket" class="btn btnSecondary hidden" type="button">Следующий билет</button>
+          <button id="reset" class="btn btnGhost" type="button">Сброс</button>
+        </div>
+
+        <div class="tiny" id="ticketResult"></div>
+      </section>
+
+      <!-- RESULT -->
+      <section id="result" class="view hidden">
+        <div class="card hero">
+          <div class="heroTitle">Готово!</div>
+          <div class="heroText" id="finalText">Результат</div>
+
+          <div class="actions">
+            <button id="tryAgain" class="btn btnPrimary" type="button">Попробовать снова</button>
+            <button id="shareBtn" class="btn btnSecondary" type="button">Поделиться результатом</button>
+          </div>
+
+          <div class="tiny" id="shareHint"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bottom">
+      <span>© Тренажёр ОГЭ 19</span>
+      <span class="dot">•</span>
+      <button id="aboutOffline" class="linkBtn" type="button">Офлайн: включено</button>
+    </footer>
+  </div>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // SW register
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+    }
+  </script>
+</body>
+</html>
