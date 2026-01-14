@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#2563eb" />
-  <meta name="description" content="ОГЭ математика. Задание 19. Тренировка истинных/ложных высказываний." />
+  <meta name="description" content="ОГЭ математика. Задание 19." />
 
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
@@ -38,16 +38,19 @@
           </div>
 
           <div class="actions">
-            <button id="startQuick" class="btn btnPrimary" type="button">Три билета для тренировки</button>
+            <button id="startQuick" class="btn btnPrimary" type="button">3 случайных билета</button>
             <button id="startFull" class="btn btnSecondary" type="button">Тест по всем вопросам</button>
           </div>
 
-          
+         
         </div>
 
         <div class="card info">
           <div class="infoRow">
-   <div class="tiny">
+            <!-- <div class="pill">Билет = 3 вопроса</div>
+            <div class="pill">Верных вариантов: 1 или 2</div>
+            <div class="pill">PWA офлайн</div> -->
+             <div class="tiny">
             Совет: установи как приложение: “Поделиться” → “На экран Домой” (iOS) или “Установить” (Android/Chrome).
           </div>
           </div>
@@ -59,7 +62,7 @@
         <div class="card status">
           <div class="statusLeft">
             <div class="statusTitle" id="ticketTitle">Билет</div>
-            
+            <!-- <div class="statusSub" id="ticketSub">Отмечено: 0/3</div> -->
           </div>
           <div class="statusRight">
             <div class="statusScore" id="scoreNow">Верно сейчас: 0/0</div>
@@ -95,8 +98,8 @@
 
     <footer class="bottom">
       <span>© Тренажёр ОГЭ 19</span>
-   
-   
+      <!-- <span class="dot">•</span>
+      <button id="aboutOffline" class="linkBtn" type="button">Офлайн включён</button> -->
     </footer>
   </div>
 
