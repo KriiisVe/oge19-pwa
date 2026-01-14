@@ -1,4 +1,3 @@
-// app.js
 (() => {
   const $ = (s) => document.querySelector(s);
 
@@ -21,12 +20,14 @@
   const tryAgain = $("#tryAgain");
   const shareBtn = $("#shareBtn");
   const shareHint = $("#shareHint");
+  const finalText = $("#finalText");
 
   const installBtn = $("#installBtn");
+  const aboutOffline = $("#aboutOffline");
 
   const LS_KEY = "oge19_state_v1";
 
-  // ----- Data prep -----
+  // ----- Bank -----
   const bank = Array.isArray(window.QUESTIONS_BANK) ? window.QUESTIONS_BANK : [];
   if (!bank.length) console.warn("QUESTIONS_BANK пуст — добавь вопросы в questions.js");
 
@@ -53,22 +54,20 @@
   const defaultState = () => ({
     mode: null, // "quick" | "full"
     ticketIndex: 0,
-    ticketsTotal: 0,
 
-    // For full: we stop when every bank item was used at least once (as an option)
+    // For full: ids used at least once (as options in questions)
     usedIds: {},
 
-    // Pools for selecting without repeats (when possible)
+    // pools for nicer randomness without repeats (when possible)
     poolTrue: [],
     poolFalse: [],
 
-    // Current ticket questions
-    ticket: [], // [{qid, kTrue, options:[{id,text,isTrue}], selectedIds:[], checked:false, isCorrect:false}]
+    // current ticket of 3 questions
+    ticket: [],
 
-    // Score
+    // overall score
     correctQuestions: 0,
-    answeredQuestions: 0,
-    totalTargetQuestions: 0, // for quick: 3, for full: dynamic but roughly ceil(N/3)*3 questions shown; we count per question
+    answeredQuestions: 0
   });
 
   let state = loadState() ?? defaultState();
@@ -110,12 +109,20 @@
     return bank.find(x => x.id === id);
   }
 
+  function cryptoRandomId() {
+    if (crypto?.getRandomValues) {
+      const b = new Uint32Array(1);
+      crypto.getRandomValues(b);
+      return "q" + b[0].toString(16);
+    }
+    return "q" + Math.random().toString(16).slice(2);
+  }
+
   function takeFromPool(isTrue, count, avoidSet) {
-    // take ids prioritizing unused, refilling when empty
     const poolName = isTrue ? "poolTrue" : "poolFalse";
     const poolBank = isTrue ? bankTrue : bankFalse;
-
     const out = [];
+
     while (out.length < count) {
       if (!state[poolName].length) state[poolName] = shuffle(poolBank.map(x => x.id));
       const id = state[poolName].shift();
@@ -127,11 +134,12 @@
   }
 
   function makeQuestion() {
-    // kTrue is 1 or 2
+    // kTrue: 1 or 2
     const kTrue = Math.random() < 0.5 ? 1 : 2;
     const avoid = new Set();
 
     refillPoolsIfNeeded();
+
     const trueIds = takeFromPool(true, kTrue, avoid);
     const falseIds = takeFromPool(false, 3 - kTrue, avoid);
 
@@ -140,7 +148,6 @@
       return { id: item.id, text: item.text, isTrue: item.isTrue };
     }));
 
-    // track used for FULL mode (as options usage)
     if (state.mode === "full") {
       for (const o of options) state.usedIds[o.id] = true;
     }
@@ -151,22 +158,16 @@
       options,
       selectedIds: [],
       checked: false,
-      isCorrect: null,
+      isCorrect: null
     };
-  }
-
-  function cryptoRandomId() {
-    // small safe id
-    if (crypto?.getRandomValues) {
-      const b = new Uint32Array(1);
-      crypto.getRandomValues(b);
-      return "q" + b[0].toString(16);
-    }
-    return "q" + Math.random().toString(16).slice(2);
   }
 
   function makeTicket() {
     return [makeQuestion(), makeQuestion(), makeQuestion()];
+  }
+
+  function allBankUsedOnce() {
+    return Object.keys(state.usedIds).length >= bank.length;
   }
 
   function show(view) {
@@ -176,34 +177,16 @@
     view.classList.remove("hidden");
   }
 
-  function showHome() {
-    show(home);
-  }
-
-  function showTest() {
-    show(test);
-    renderTicket();
-  }
-
-  function showResult() {
-    show(result);
-    renderResult();
-  }
+  function showHome() { show(home); }
+  function showTest() { show(test); renderTicket(); }
+  function showResult() { show(result); renderResult(); }
 
   // ----- Start modes -----
   function startMode(mode) {
     state = defaultState();
     state.mode = mode;
 
-    // quick: ровно 1 билет (3 вопроса)
-    if (mode === "quick") {
-      state.ticketsTotal = 1;
-      state.totalTargetQuestions = 3;
-    }
-
-    // full: идём билетами, пока не использовали все утверждения хотя бы раз
     if (mode === "full") {
-      state.totalTargetQuestions = 0; // будем считать по факту
       state.usedIds = {};
     }
 
@@ -213,44 +196,277 @@
     showTest();
   }
 
-  // ----- Rendering -----
+  // ----- Render -----
   function renderTicket() {
     ticketResult.textContent = "";
 
-    // ticket header
+    // Header
     if (state.mode === "quick") {
       ticketTitle.textContent = `Билет 1 из 1`;
     } else {
-      // ticketsTotal заранее неизвестно — покажем "Билет N"
       ticketTitle.textContent = `Билет ${state.ticketIndex + 1}`;
     }
 
-    // counts
+    // Counts
     const totalAnswered = state.answeredQuestions;
     const totalCorrect = state.correctQuestions;
     scoreNow.textContent = `Верно сейчас: ${totalCorrect}/${Math.max(totalAnswered, 0)}`;
 
-    // per-ticket: checked/required
-    const checkedCount = state.ticket.filter(q => q.selectedIds.length > 0).length;
-    ticketSub.textContent = `Отмечено: ${checkedCount}/3`;
+    const markedCount = state.ticket.reduce((acc, q) => acc + (q.selectedIds.length > 0 ? 1 : 0), 0);
+    ticketSub.textContent = `Отмечено: ${markedCount}/3`;
 
-    // buttons
     const allChecked = state.ticket.every(q => q.checked);
     submitTicket.classList.toggle("hidden", allChecked);
     nextTicket.classList.toggle("hidden", !allChecked);
 
+    // Questions
     questionsWrap.innerHTML = "";
 
     state.ticket.forEach((q, idx) => {
       const card = document.createElement("div");
       card.className = "qCard";
-
-      // after check: color state
-      if (q.checked) {
-        card.classList.add(q.isCorrect ? "stateOk" : "stateBad");
-      }
+      if (q.checked) card.classList.add(q.isCorrect ? "stateOk" : "stateBad");
 
       const head = document.createElement("div");
       head.className = "qHead";
 
-      const title =
+      const title = document.createElement("div");
+      title.className = "qTitle";
+
+      const needText = (q.kTrue === 1)
+        ? "Какое из следующих утверждений истинно?"
+        : "Какие из следующих утверждений истинны?";
+
+      title.textContent = `${idx + 1}. ${needText}`;
+
+      const meta = document.createElement("div");
+      meta.className = "qMeta";
+      meta.textContent = `верных: ${q.kTrue}`;
+
+      head.appendChild(title);
+      head.appendChild(meta);
+      card.appendChild(head);
+
+      const opts = document.createElement("div");
+      opts.className = "opts";
+
+      q.options.forEach((opt, optIdx) => {
+        const row = document.createElement("label");
+        row.className = "opt";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.disabled = q.checked;
+        cb.checked = q.selectedIds.includes(opt.id);
+
+        cb.addEventListener("change", () => {
+          if (cb.checked) {
+            if (!q.selectedIds.includes(opt.id)) q.selectedIds.push(opt.id);
+          } else {
+            q.selectedIds = q.selectedIds.filter(id => id !== opt.id);
+          }
+          saveState();
+          renderTicket();
+        });
+
+        const t = document.createElement("div");
+        t.className = "optText";
+        t.textContent = opt.text;
+
+        row.appendChild(cb);
+        row.appendChild(t);
+
+        // маленькая подсказка после проверки
+        if (q.checked) {
+          const hint = document.createElement("div");
+          hint.className = "optHint";
+
+          const selected = q.selectedIds.includes(opt.id);
+          if (opt.isTrue && selected) hint.textContent = "✓ Вы выбрали истинное";
+          else if (opt.isTrue && !selected) hint.textContent = "• Истинное (не выбрано)";
+          else if (!opt.isTrue && selected) hint.textContent = "• Ложное (выбрано ошибочно)";
+          else hint.textContent = "";
+
+          row.appendChild(hint);
+        }
+
+        opts.appendChild(row);
+      });
+
+      card.appendChild(opts);
+
+      if (q.checked) {
+        const feedback = document.createElement("div");
+        feedback.className = "qFeedback";
+
+        const badge = document.createElement("span");
+        badge.className = "badge " + (q.isCorrect ? "badgeOk" : "badgeBad");
+        badge.textContent = q.isCorrect ? "✅ Верно" : "❌ Неправильно";
+
+        const correctIds = q.options.filter(o => o.isTrue).map(o => o.id);
+        const correctTexts = q.options
+          .filter(o => o.isTrue)
+          .map(o => `• ${o.text}`)
+          .join(" ");
+
+        const msg = document.createElement("span");
+        msg.textContent = q.isCorrect
+          ? "Правильно"
+          : `Правильный ответ: ${correctIds.length === 1 ? "истинное утверждение" : "истинные утверждения"}.`;
+
+        feedback.appendChild(badge);
+        feedback.appendChild(msg);
+
+        const extra = document.createElement("div");
+        extra.className = "tiny";
+        extra.style.marginTop = "8px";
+        extra.textContent = q.isCorrect ? "" : "";
+
+        card.appendChild(feedback);
+
+        if (!q.isCorrect) {
+          const block = document.createElement("div");
+          block.className = "tiny";
+          block.style.marginTop = "8px";
+          // показываем сами верные формулировки (как объяснение)
+          block.textContent = "Истинные: " + q.options.filter(o => o.isTrue).map(o => o.text).join(" | ");
+          card.appendChild(block);
+        }
+      }
+
+      questionsWrap.appendChild(card);
+    });
+  }
+
+  // ----- Check logic -----
+  function setsEqual(aArr, bArr) {
+    const a = new Set(aArr);
+    const b = new Set(bArr);
+    if (a.size !== b.size) return false;
+    for (const x of a) if (!b.has(x)) return false;
+    return true;
+  }
+
+  function checkTicket() {
+    // require answers for all 3 questions
+    const missing = state.ticket.filter(q => q.selectedIds.length === 0).length;
+    if (missing > 0) {
+      ticketResult.textContent = `Нужно отметить ответы во всех 3 вопросах.`;
+      return;
+    }
+
+    let correctInTicket = 0;
+
+    state.ticket.forEach((q) => {
+      const correctIds = q.options.filter(o => o.isTrue).map(o => o.id);
+
+      q.checked = true;
+      q.isCorrect = setsEqual(q.selectedIds, correctIds);
+
+      state.answeredQuestions += 1;
+      if (q.isCorrect) {
+        state.correctQuestions += 1;
+        correctInTicket += 1;
+      }
+    });
+
+    // summary under buttons
+    ticketResult.textContent = `Результат билета: ${correctInTicket}/3.`;
+
+    saveState();
+    renderTicket();
+  }
+
+  function nextStep() {
+    const isQuick = state.mode === "quick";
+
+    if (isQuick) {
+      // after one ticket -> result
+      showResult();
+      return;
+    }
+
+    // full mode: stop once every bank statement appeared at least once (as an option)
+    // note: current ticket already contributed to usedIds when created
+    if (allBankUsedOnce()) {
+      showResult();
+      return;
+    }
+
+    // else generate next ticket
+    state.ticketIndex += 1;
+    state.ticket = makeTicket();
+    saveState();
+    renderTicket();
+  }
+
+  // ----- Result + Share -----
+  function renderResult() {
+    const total = state.answeredQuestions;
+    const correct = state.correctQuestions;
+    const percent = total ? Math.round((correct / total) * 100) : 0;
+
+    const modeLabel = state.mode === "quick" ? "3 случайных" : "по всем вопросам";
+    finalText.textContent = `Режим: ${modeLabel}. Верно: ${correct}/${total} (${percent}%).`;
+
+    // hint about share
+    if (navigator.share) {
+      shareHint.textContent = "Нажми «Поделиться» — можно отправить в Telegram.";
+    } else {
+      shareHint.textContent = "Если кнопка «Поделиться» не работает, откроется Telegram с готовым сообщением.";
+    }
+  }
+
+  async function shareResult() {
+    const total = state.answeredQuestions;
+    const correct = state.correctQuestions;
+    const percent = total ? Math.round((correct / total) * 100) : 0;
+    const modeLabel = state.mode === "quick" ? "3 случайных" : "по всем вопросам";
+
+    const text = `ОГЭ 19 — результат ✅\nРежим: ${modeLabel}\nВерно: ${correct}/${total} (${percent}%)`;
+
+    // Try native share (mobile)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "ОГЭ 19 — результат",
+          text
+        });
+        return;
+      } catch {
+        // fallthrough to telegram
+      }
+    }
+
+    // Telegram fallback (opens app if installed)
+    const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(location.href)}&text=${encodeURIComponent(text)}`;
+    window.open(tgUrl, "_blank", "noopener,noreferrer");
+  }
+
+  // ----- Events -----
+  startQuick.addEventListener("click", () => startMode("quick"));
+  startFull.addEventListener("click", () => startMode("full"));
+
+  submitTicket.addEventListener("click", checkTicket);
+  nextTicket.addEventListener("click", nextStep);
+
+  resetBtn.addEventListener("click", hardReset);
+  tryAgain.addEventListener("click", () => {
+    // restart same mode or go home if none
+    if (!state.mode) showHome();
+    else startMode(state.mode);
+  });
+
+  shareBtn.addEventListener("click", shareResult);
+
+  aboutOffline.addEventListener("click", () => {
+    alert("Офлайн режим включён: приложение кэширует файлы через Service Worker и работает без интернета.");
+  });
+
+  // ----- Bootstrap: if unfinished test exists, continue
+  if (state.mode && state.ticket?.length) {
+    showTest();
+  } else {
+    showHome();
+  }
+})();
